@@ -1,0 +1,201 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500&family=Roboto&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #303952;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    height: 100vh;
+}
+
+main {
+    max-width: 1000px;
+    width: 100%;
+    height: 95vh;
+    margin: auto;
+    background: #363d4b;
+    padding: 15px;
+}
+
+.content_title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #f39c12;
+    text-align: center;
+    position: relative;
+    margin-bottom: 7px;
+}
+
+.content_title::after {
+    content: '';
+    width: 160px;
+    height: 3px;
+    background: #bdc3c7;
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.task_create_title, .task_manage_title {
+    font-size: 22px;
+    font-weight: 500;
+    color: #f39c12;
+    margin: 20px 0 0 0;
+}
+
+.separator {
+    width: 100%;
+    height: 1px;
+    margin: 5px 0 10px;
+    background: #bdc3c7;
+}
+
+#task_form{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    margin-bottom: 20px;
+}
+
+#task_form label {
+    color: #f39c12;
+    padding-bottom: 5px;
+}
+
+.task_name, .task_priority, .task_date, .task_submit {
+   display: grid;
+   grid-template-columns: repeat(1, 1fr);
+   padding: 0 50px;
+}
+
+.task_name input, .task_priority select, .task_date input {
+    height: 30px;
+    width: 100%;
+    border-radius: 3px;
+    border: 0;
+} 
+
+.task_name input, .task_date input {
+    padding: 15px;
+}
+
+.task_priority select, .task_date input {
+    cursor: pointer;
+}
+
+.task_submit input  {
+    background-color: #f39c12;
+    color: #fff;
+    cursor: pointer;
+    height: 30px;
+    width: 90px;
+    border-radius: 3px;
+    border: 0;
+}
+
+.task_manage_container {
+    width: 100%;
+    padding: 0 10px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+
+}
+
+.task_manage_container label {
+    color: #f39c12;
+    padding-bottom: 5px;
+}
+
+.search, .filter, .sort, .date {
+    display: grid;
+   grid-template-columns: repeat(1, 1fr);
+   padding: 0 50px;
+}
+
+.search input, .filter select, .sort select, .date input {
+    height: 30px;
+    width: 100%;
+    border-radius: 3px;
+    border: 0;
+}
+
+.search input, .date input {
+    padding: 15px;
+}
+
+.filter select, .sort select, .date input  {
+    cursor: pointer;
+}
+
+table {
+    margin: 20px 0 0 0;
+}
+
+table, thead, tr, tbody {
+    width: 100%;
+    display: block;
+}
+
+thead {
+    color: #f39c12;
+    background-color: #130f40;
+}
+
+tr {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 30px;
+}
+
+#table_body tr {
+    cursor: pointer;
+    transition: All 0.4s ease-in-out;
+}
+
+#table_body tr:hover {
+    background: #f39c12;
+}
+
+th, td {
+    text-align: center;
+    flex: 1;
+}
+
+td button {
+    border: 0;
+    outline: 0;
+    padding: 0 8px;
+    cursor: pointer;
+    background-color: unset;
+}
+
+td button i {
+    font-size: 20px;
+}
+
+.edit i {
+    color: #2f0150;
+}
+
+.complete i {
+    color: #16a085;
+}
+
+.delete i {
+    color: #c0392b;
+}
