@@ -101,14 +101,16 @@
             const table_data = [...tds];
             table_data.forEach(td => {
                 if (td.id === "status") {
-                    lists.forEach(list => {
-                        if (list.status == "Incomplete") {
-                            list.status = "Complete";
-                            td.innerHTML = "Complete";
-                        }
-                        else {
-                            list.status = "Incomplete";
-                            td.innerHTML = "Incomplete";
+                    lists.filter(list => {
+                        if (list.id === id) {
+                            if (list.status == "Incomplete") {
+                                list.status = "Complete";
+                                td.innerHTML = "Complete";
+                            }
+                            else {
+                                list.status = "Incomplete";
+                                td.innerHTML = "Incomplete";
+                            }
                         }
                     })
                 }
