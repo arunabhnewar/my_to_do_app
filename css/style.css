@@ -188,14 +188,14 @@ td button i {
     font-size: 20px;
 }
 
-.edit i {
+#edit i {
     color: #2f0150;
 }
 
-.complete i {
+#check i {
     color: #16a085;
 }
 
-.delete i {
+#delete i {
     color: #c0392b;
 }
