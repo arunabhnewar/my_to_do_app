@@ -88,18 +88,121 @@
 
     // Task list event
     tableBody.addEventListener('click', function (e) {
+
+        // Edit button event
         if (e.target.id == "edit") {
-            console.log("edited");
+            const tr = e.target.parentElement.parentElement;
+            const id = tr.dataset.id;
+            const tds = tr.children;
+
+            // 
+            let nameTd;
+            let newNameInput;
+            let priorityTd;
+            let newPrioritySelect;
+            let dateTd;
+            let newDateInput;
+            let actionTd;
+            let eventButtons;
+
+
+            [...tds].forEach(td => {
+
+                if (td.id === "name") {
+                    nameTd = td;
+                    const prevName = td.textContent;
+                    td.innerText = '';
+                    newNameInput = document.createElement("input");
+                    newNameInput.type = 'text';
+                    newNameInput.value = prevName;
+                    td.appendChild(newNameInput);
+
+                }
+                else if (td.id === "priority") {
+                    priorityTd = td;
+                    const prevPriority = td.textContent;
+                    td.innerText = '';
+                    newPrioritySelect = document.createElement("select");
+                    newPrioritySelect.innerHTML = `
+                    <option disabled>Select</option>
+                    <option value="high">High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                    `;
+
+                    if (prevPriority === "high") {
+                        newPrioritySelect.selectedIndex = 1;
+                    } else if (prevPriority === "medium") {
+                        newPrioritySelect.selectedIndex = 2;
+                    } else if (prevPriority === "low") {
+                        newPrioritySelect.selectedIndex = 3;
+                    }
+                    td.appendChild(newPrioritySelect);
+                }
+                else if (td.id === "date") {
+                    dateTd = td;
+                    const prevDate = td.textContent;
+                    td.innerText = '';
+                    newDateInput = document.createElement("input");
+                    newDateInput.type = 'date';
+                    newDateInput.value = prevDate;
+                    td.appendChild(newDateInput);
+
+                }
+                else if (td.id === "action") {
+                    actionTd = td;
+                    eventButtons = td.innerHTML;
+                    td.innerHTML = '';
+                    const saveBtn = document.createElement("button");
+                    saveBtn.innerHTML = '<i class="fas fa-file-upload"></i>';
+
+                    saveBtn.addEventListener('click', function () {
+                        // Name button
+                        const newName = newNameInput.value;
+                        nameTd.innerHTML = newName;
+
+                        // Priority button
+                        const newPriority = newPrioritySelect.value;
+                        priorityTd.innerHTML = newPriority;
+
+                        // Date button
+                        const newDate = newDateInput.value;
+                        dateTd.innerHTML = newDate;
+
+                        // Action button
+                        actionTd.innerHTML = eventButtons;
+
+                        // Save modified task info on local storage
+                        let lists = getFromLocalStorage();
+                        console.log(lists);
+                        lists = lists.filter(list => {
+                            if (list.id === id) {
+                                list.name = newName;
+                                list.priority = newPriority;
+                                list.date = newDate;
+                                return list;
+                            }
+                            else {
+                                return list;
+                            }
+                        })
+                        console.log(lists);
+                        setFromLocalStorage(lists);
+                    })
+                    td.appendChild(saveBtn);
+                }
+            })
         }
 
+
+        // Check button event
         else if (e.target.id == "check") {
             const tr = e.target.parentElement.parentElement;
             const id = tr.dataset.id;
             const tds = tr.children;
             let lists = getFromLocalStorage();
 
-            const table_data = [...tds];
-            table_data.forEach(td => {
+            [...tds].forEach(td => {
                 if (td.id === "status") {
                     lists.filter(list => {
                         if (list.id === id) {
@@ -118,6 +221,8 @@
             setFromLocalStorage(lists);
         }
 
+
+        // Delete button event
         else if (e.target.id == "delete") {
             const tr = e.target.parentElement.parentElement;
             const id = tr.dataset.id;
@@ -130,7 +235,6 @@
             })
             setFromLocalStorage(lists);
             loading();
-
         }
     })
 
