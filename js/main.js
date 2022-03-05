@@ -4,13 +4,176 @@
     const taskForm = document.getElementById('task_form');
     const date = document.getElementById('date');
     const tableBody = document.getElementById('table_body');
-
-
+    const searchField = document.getElementById('search');
+    const filterField = document.getElementById('search_filter');
+    const sortField = document.getElementById('search_sort');
+    const dateField = document.getElementById('search_date');
 
     // Get today date
     const today = new Date().toISOString().slice(0, 10);
     date.value = today;
 
+
+    // Search function implement
+    searchField.addEventListener('input', function (e) {
+        tableBody.innerHTML = '';
+        filterField.selectedIndex = 0;
+        sortField.selectedIndex = 0;
+        dateField.value = '';
+
+        const searchValue = this.value.toLowerCase();
+        let index = 0;
+        const lists = getFromLocalStorage();
+        lists.forEach((list) => {
+            if (list.name.toLowerCase().includes(searchValue)) {
+                ++index;
+                showDataOnUI(list, index);
+            }
+        })
+    })
+
+
+    // Filter function implement
+    filterField.addEventListener('change', function (e) {
+        tableBody.innerHTML = '';
+        searchField.value = '';
+        sortField.selectedIndex = 0;
+        dateField.value = '';
+
+        const filterValue = this.value;
+        let lists = getFromLocalStorage();
+
+        switch (filterValue) {
+            case "all":
+                lists.forEach((list, index) => {
+                    showDataOnUI(list, index + 1);
+                })
+                break;
+
+            case "complete":
+                let completeI = 0;
+                lists.forEach((list) => {
+                    if (list.status === "complete") {
+                        ++completeI;
+                        showDataOnUI(list, completeI);
+                    }
+                })
+                break;
+
+            case "incomplete":
+                let incompleteI = 0;
+                lists.forEach((list) => {
+                    if (list.status === "incomplete") {
+                        ++incompleteI;
+                        showDataOnUI(list, incompleteI);
+                    }
+                })
+                break;
+
+            case "today":
+                let todayI = 0;
+                lists.forEach((list) => {
+                    if (list.date === today) {
+                        ++todayI;
+                        showDataOnUI(list, todayI);
+                    }
+                })
+                break;
+
+            case "high_priority":
+                let highI = 0;
+                lists.forEach((list) => {
+                    if (list.priority === "high") {
+                        ++highI;
+                        showDataOnUI(list, highI);
+                    }
+                })
+                break;
+
+            case "medium_priority":
+                let mediumI = 0;
+                lists.forEach((list) => {
+                    if (list.priority === "medium") {
+                        ++mediumI;
+                        showDataOnUI(list, mediumI);
+                    }
+                })
+                break;
+
+            case "low_priority":
+                let lowI = 0;
+                lists.forEach((list) => {
+                    if (list.priority === "low") {
+                        ++lowI;
+                        showDataOnUI(list, lowI);
+                    }
+                })
+                break;
+        }
+    })
+
+
+    // Sort function implement
+    sortField.addEventListener('change', function (e) {
+        tableBody.innerHTML = '';
+        searchField.value = '';
+        filterField.selectedIndex = 0;
+        dateField.value = '';
+
+        const sortValue = this.value;
+        let lists = getFromLocalStorage();
+
+        if (sortValue === 'newest') {
+            lists.sort((a, b) => {
+                if (new Date(a.date) > new Date(b.date)) {
+                    return -1;
+                }
+                else if (new Date(a.date) < new Date(b.date)) {
+                    return 1;
+                }
+                else {
+                    return 0;
+                }
+            })
+        }
+        else {
+            lists.sort((a, b) => {
+                if (new Date(a.date) > new Date(b.date)) {
+                    return 1;
+                }
+                else if (new Date(a.date) < new Date(b.date)) {
+                    return -1;
+                }
+                else {
+                    return 0;
+                }
+            })
+        }
+        lists.forEach((list, index) => {
+            showDataOnUI(list, index + 1)
+        })
+    })
+
+
+    // Date function implement
+    dateField.addEventListener('change', function (e) {
+        tableBody.innerHTML = '';
+        searchField.value = '';
+        filterField.selectedIndex = 0;
+        sortField.selectedIndex = 0;
+
+        const dateValue = this.value;
+        let dateIndex = 0;
+        let lists = getFromLocalStorage();
+
+        lists.filter((list) => {
+            if (list.date === dateValue) {
+                ++dateIndex;
+                showDataOnUI(list, dateIndex)
+            }
+        })
+
+    })
 
 
     // Add a submit event
@@ -32,7 +195,7 @@
             }
         })
         if (isValid) {
-            formData.status = "Incomplete";
+            formData.status = "incomplete";
             formData.id = uuidv4();
             const lists = getFromLocalStorage();
             showDataOnUI(formData, lists.length + 1);
@@ -174,7 +337,6 @@
 
                         // Save modified task info on local storage
                         let lists = getFromLocalStorage();
-                        console.log(lists);
                         lists = lists.filter(list => {
                             if (list.id === id) {
                                 list.name = newName;
@@ -186,7 +348,6 @@
                                 return list;
                             }
                         })
-                        console.log(lists);
                         setFromLocalStorage(lists);
                     })
                     td.appendChild(saveBtn);
@@ -206,13 +367,13 @@
                 if (td.id === "status") {
                     lists.filter(list => {
                         if (list.id === id) {
-                            if (list.status == "Incomplete") {
-                                list.status = "Complete";
-                                td.innerHTML = "Complete";
+                            if (list.status == "incomplete") {
+                                list.status = "complete";
+                                td.innerHTML = "complete";
                             }
                             else {
-                                list.status = "Incomplete";
-                                td.innerHTML = "Incomplete";
+                                list.status = "incomplete";
+                                td.innerHTML = "incomplete";
                             }
                         }
                     })
