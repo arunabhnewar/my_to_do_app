@@ -141,6 +141,34 @@ main {
     cursor: pointer;
 }
 
+#bulk_action {
+    display: none;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height:50px;
+    background: #0a3d62;
+    padding: 0 25px;
+}
+
+#bulk_del {
+    padding: 5px 10px;
+    cursor: pointer;
+    background: #e75e02;
+    color: #fff;
+    border: 0;
+}
+
+#dismiss {
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    border: 0;
+    background: #eb2f06;
+    color: #fff;
+    cursor: pointer;
+}
+
 table {
     margin: 20px 0 0 0;
 }

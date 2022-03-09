@@ -8,6 +8,8 @@
     const filterField = document.getElementById('search_filter');
     const sortField = document.getElementById('search_sort');
     const dateField = document.getElementById('search_date');
+    const allSelect = document.getElementById('all_select');
+    const bulkAction = document.getElementById('bulk_action');
 
     // Get today date
     const today = new Date().toISOString().slice(0, 10);
@@ -206,10 +208,73 @@
     })
 
 
+    // 
+    let checked = [];
+
+
+    // 
+    function selectedFunction(e) {
+        let tr = e.target.parentElement.parentElement;
+        let id = tr.dataset.id;
+
+        if (e.target.checked) {
+            checked.push(tr);
+            bulkActionHandler();
+        }
+        else {
+            const index = checked.findIndex(tr => tr.dataset.id === id);
+            checked.splice(index, 1);
+            bulkActionHandler();
+        }
+    }
+
+
+
+    // 
+    function bulkActionHandler() {
+        if (checked.length) {
+            bulkAction.style.display = 'flex';
+        }
+        else {
+            bulkAction.style.display = 'none';
+        }
+    }
+
+
+
+    // All select event implement
+    allSelect.addEventListener('change', function (e) {
+        const checkBoxes = document.getElementsByClassName('check_box');
+        if (e.target.checked) {
+            checked = [];
+            for (let box of checkBoxes) {
+                box.checked = true;
+                checked.push(box.parentElement.parentElement);
+            }
+            bulkActionHandler();
+        }
+        else {
+            for (let box of checkBoxes) {
+                box.checked = false;
+                checked = [];
+            }
+            bulkActionHandler();
+        }
+    })
+
+
     // Showing the tasks list on UI
     function showDataOnUI({ id, name, priority, status, date }, index) {
         const tr = document.createElement('tr');
+        const check = document.createElement('input');
+        check.type = 'checkbox';
+        check.className = 'check_box';
+
+        check.addEventListener('change', selectedFunction)
+
+
         tr.innerHTML = `
+        <td id="check"></td>
         <td id="number">${index}</td>
         <td id="name">${name}</td>
         <td id="priority">${priority}</td>
@@ -228,6 +293,7 @@
         </td>
         `
         tr.dataset.id = id;
+        tr.firstElementChild.appendChild(check);
         tableBody.appendChild(tr);
     }
 
