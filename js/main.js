@@ -10,6 +10,8 @@
     const dateField = document.getElementById('search_date');
     const allSelect = document.getElementById('all_select');
     const bulkAction = document.getElementById('bulk_action');
+    const bulkDelete = document.getElementById('bulk_del');
+    const dismiss = document.getElementById('dismiss');
 
     // Get today date
     const today = new Date().toISOString().slice(0, 10);
@@ -205,34 +207,57 @@
             setFromLocalStorage(lists);
         }
         this.reset();
+        date.value = today;
     })
 
 
-    // 
-    let checked = [];
+    // Selected array
+    let checkedArray = [];
 
 
-    // 
+    // Select event function
     function selectedFunction(e) {
         let tr = e.target.parentElement.parentElement;
         let id = tr.dataset.id;
+        let isChecked = e.target.checked;
 
-        if (e.target.checked) {
-            checked.push(tr);
+        if (isChecked) {
+            checkedArray.push(tr);
             bulkActionHandler();
         }
         else {
-            const index = checked.findIndex(tr => tr.dataset.id === id);
-            checked.splice(index, 1);
+            const index = checkedArray.findIndex(tr => tr.dataset.id === id);
+            checkedArray.splice(index, 1);
             bulkActionHandler();
         }
     }
 
 
+    // All select event implement
+    allSelect.addEventListener('change', function (e) {
+        let isChecked = e.target.checked;
+        let checkBoxes = document.querySelectorAll('.check_box');
+        checkedArray = [];
 
-    // 
+        if (isChecked) {
+            [...checkBoxes].forEach(box => {
+                box.checked = true;
+                checkedArray.push(box.parentElement.parentElement);
+                bulkActionHandler()
+            })
+        }
+        else {
+            [...checkBoxes].forEach(box => {
+                box.checked = false;
+                bulkActionHandler()
+            })
+        }
+    })
+
+
+    // Bulk Action function
     function bulkActionHandler() {
-        if (checked.length) {
+        if (checkedArray.length) {
             bulkAction.style.display = 'flex';
         }
         else {
@@ -241,37 +266,39 @@
     }
 
 
+    // Bulk delete event function
+    bulkDelete.addEventListener('click', function (e) {
+        let lists = getFromLocalStorage();
 
-    // All select event implement
-    allSelect.addEventListener('change', function (e) {
-        const checkBoxes = document.getElementsByClassName('check_box');
-        if (e.target.checked) {
-            checked = [];
-            for (let box of checkBoxes) {
-                box.checked = true;
-                checked.push(box.parentElement.parentElement);
-            }
-            bulkActionHandler();
-        }
-        else {
-            for (let box of checkBoxes) {
-                box.checked = false;
-                checked = [];
-            }
-            bulkActionHandler();
-        }
+        checkedArray.forEach(tr => {
+            const id = tr.dataset.id;
+            lists = lists.filter(tr => tr.id !== id);
+            tr.remove();
+            allSelect.checked = false;
+        })
+        setFromLocalStorage(lists);
+    })
+
+
+    // Bulk dismiss event function
+    dismiss.addEventListener('click', function (e) {
+        let checkBoxes = document.querySelectorAll('.check_box');
+        [...checkBoxes].forEach(box => {
+            box.checked = false;
+        })
+        checkedArray = [];
+        allSelect.checked = false;
+        bulkActionHandler();
     })
 
 
     // Showing the tasks list on UI
     function showDataOnUI({ id, name, priority, status, date }, index) {
         const tr = document.createElement('tr');
-        const check = document.createElement('input');
-        check.type = 'checkbox';
-        check.className = 'check_box';
-
-        check.addEventListener('change', selectedFunction)
-
+        const checkBox = document.createElement('input');
+        checkBox.type = 'checkbox';
+        checkBox.className = 'check_box';
+        checkBox.addEventListener('change', selectedFunction)
 
         tr.innerHTML = `
         <td id="check"></td>
@@ -293,7 +320,7 @@
         </td>
         `
         tr.dataset.id = id;
-        tr.firstElementChild.appendChild(check);
+        tr.firstElementChild.appendChild(checkBox);
         tableBody.appendChild(tr);
     }
 
@@ -464,7 +491,6 @@
             loading();
         }
     })
-
 
 
     // Get tasks on load

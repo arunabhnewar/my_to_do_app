@@ -153,10 +153,19 @@ main {
 
 #bulk_del {
     padding: 5px 10px;
+    margin: 0 0 0 10px;
     cursor: pointer;
     background: #e75e02;
     color: #fff;
     border: 0;
+}
+
+#bulk_edit {
+    padding: 5px 15px;
+    border: 0;
+    cursor: pointer;
+    background: #16a085;
+    color: #fff;
 }
 
 #dismiss {
