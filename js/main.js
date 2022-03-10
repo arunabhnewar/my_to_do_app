@@ -4,12 +4,20 @@
     const taskForm = document.getElementById('task_form');
     const date = document.getElementById('date');
     const tableBody = document.getElementById('table_body');
+
     const searchField = document.getElementById('search');
     const filterField = document.getElementById('search_filter');
     const sortField = document.getElementById('search_sort');
     const dateField = document.getElementById('search_date');
+
     const allSelect = document.getElementById('all_select');
+
     const bulkAction = document.getElementById('bulk_action');
+    const groupAction = document.getElementById('group_action');
+    const bulkInput = document.getElementById('bulk_input');
+    const bulkSelect = document.getElementById('bulk_select')
+    const bulkPriority = document.getElementById('bulk_priority');
+    const bulkStatus = document.getElementById('bulk_status');
     const bulkDelete = document.getElementById('bulk_del');
     const dismiss = document.getElementById('dismiss');
 
@@ -211,87 +219,6 @@
     })
 
 
-    // Selected array
-    let checkedArray = [];
-
-
-    // Select event function
-    function selectedFunction(e) {
-        let tr = e.target.parentElement.parentElement;
-        let id = tr.dataset.id;
-        let isChecked = e.target.checked;
-
-        if (isChecked) {
-            checkedArray.push(tr);
-            bulkActionHandler();
-        }
-        else {
-            const index = checkedArray.findIndex(tr => tr.dataset.id === id);
-            checkedArray.splice(index, 1);
-            bulkActionHandler();
-        }
-    }
-
-
-    // All select event implement
-    allSelect.addEventListener('change', function (e) {
-        let isChecked = e.target.checked;
-        let checkBoxes = document.querySelectorAll('.check_box');
-        checkedArray = [];
-
-        if (isChecked) {
-            [...checkBoxes].forEach(box => {
-                box.checked = true;
-                checkedArray.push(box.parentElement.parentElement);
-                bulkActionHandler()
-            })
-        }
-        else {
-            [...checkBoxes].forEach(box => {
-                box.checked = false;
-                bulkActionHandler()
-            })
-        }
-    })
-
-
-    // Bulk Action function
-    function bulkActionHandler() {
-        if (checkedArray.length) {
-            bulkAction.style.display = 'flex';
-        }
-        else {
-            bulkAction.style.display = 'none';
-        }
-    }
-
-
-    // Bulk delete event function
-    bulkDelete.addEventListener('click', function (e) {
-        let lists = getFromLocalStorage();
-
-        checkedArray.forEach(tr => {
-            const id = tr.dataset.id;
-            lists = lists.filter(tr => tr.id !== id);
-            tr.remove();
-            allSelect.checked = false;
-        })
-        setFromLocalStorage(lists);
-    })
-
-
-    // Bulk dismiss event function
-    dismiss.addEventListener('click', function (e) {
-        let checkBoxes = document.querySelectorAll('.check_box');
-        [...checkBoxes].forEach(box => {
-            box.checked = false;
-        })
-        checkedArray = [];
-        allSelect.checked = false;
-        bulkActionHandler();
-    })
-
-
     // Showing the tasks list on UI
     function showDataOnUI({ id, name, priority, status, date }, index) {
         const tr = document.createElement('tr');
@@ -360,7 +287,6 @@
             let newDateInput;
             let actionTd;
             let eventButtons;
-
 
             [...tds].forEach(td => {
 
@@ -493,6 +419,203 @@
     })
 
 
+    // Selected array
+    let checkedArray = [];
+
+
+    // Select event function
+    function selectedFunction(e) {
+        let tr = e.target.parentElement.parentElement;
+        let id = tr.dataset.id;
+        let isChecked = e.target.checked;
+
+        if (isChecked) {
+            checkedArray.push(tr);
+            bulkActionHandler();
+        }
+        else {
+            const index = checkedArray.findIndex(tr => tr.dataset.id === id);
+            checkedArray.splice(index, 1);
+            bulkActionHandler();
+        }
+    }
+
+
+    // All select event implement
+    allSelect.addEventListener('change', function (e) {
+        let isChecked = e.target.checked;
+        let checkBoxes = document.querySelectorAll('.check_box');
+        checkedArray = [];
+
+        if (isChecked) {
+            [...checkBoxes].forEach(box => {
+                box.checked = true;
+                checkedArray.push(box.parentElement.parentElement);
+                bulkActionHandler()
+            })
+        }
+        else {
+            [...checkBoxes].forEach(box => {
+                box.checked = false;
+                bulkActionHandler()
+            })
+        }
+    })
+
+
+    // Bulk Action function
+    function bulkActionHandler() {
+        if (checkedArray.length) {
+            bulkAction.style.display = 'flex';
+        }
+        else {
+            bulkAction.style.display = 'none';
+        }
+    }
+
+
+    // Bulk select event function
+    bulkSelect.onchange = function (e) {
+        if (e.target.value == "name") {
+            bulkInput.type = "text";
+        }
+        else {
+            bulkInput.type = "date";
+        }
+    }
+
+
+    // Bulk select event function
+    bulkInput.oninput = function (e) {
+        let changedValue = this.value;
+        let lists = getFromLocalStorage();
+
+        if (this.type == "text") {
+            checkedArray.forEach(tr => {
+                const id = tr.dataset.id;
+                [...tr.children].forEach(td => {
+                    if (td.id == "name") {
+                        td.innerHTML = changedValue;
+                    }
+                })
+                lists = lists.filter(list => {
+                    if (list.id == id) {
+                        list.name = changedValue;
+                        return list;
+                    }
+                    else {
+                        return list;
+                    }
+                })
+            })
+        }
+        else {
+            checkedArray.forEach(tr => {
+                const id = tr.dataset.id;
+                [...tr.children].forEach(td => {
+                    if (td.id == "date") {
+                        td.innerHTML = changedValue;
+                    }
+                })
+                lists = lists.filter(list => {
+                    if (list.id == id) {
+                        list.date = changedValue;
+                        return list;
+                    }
+                    else {
+                        return list;
+                    }
+                })
+            })
+        }
+        setFromLocalStorage(lists);
+    }
+
+
+    // Bulk priority event function
+    bulkPriority.addEventListener('change', function (e) {
+        let selected = this.value;
+        let lists = getFromLocalStorage();
+
+        checkedArray.forEach(tr => {
+            const id = tr.dataset.id;
+            [...tr.children].forEach(td => {
+                if (td.id == "priority") {
+                    td.innerHTML = selected;
+                }
+            })
+            lists = lists.filter(list => {
+                if (list.id == id) {
+                    list.priority = selected;
+                    return list;
+                }
+                else {
+                    return list;
+                }
+            })
+        })
+        setFromLocalStorage(lists);
+    })
+
+
+    // Bulk status event function
+    bulkStatus.addEventListener('change', function (e) {
+        let selected = this.value;
+        let lists = getFromLocalStorage();
+
+        checkedArray.forEach(tr => {
+            const id = tr.dataset.id;
+            [...tr.children].forEach(td => {
+                if (td.id == "status") {
+                    td.innerHTML = selected;
+                }
+            })
+            lists = lists.filter(list => {
+                if (list.id == id) {
+                    list.status = selected;
+                    return list;
+                }
+                else {
+                    return list;
+                }
+            })
+        })
+        setFromLocalStorage(lists);
+    })
+
+
+    // Bulk delete event function
+    bulkDelete.addEventListener('click', function (e) {
+        let lists = getFromLocalStorage();
+
+        checkedArray.forEach(tr => {
+            const id = tr.dataset.id;
+            lists = lists.filter(tr => tr.id !== id);
+            tr.remove();
+            allSelect.checked = false;
+        })
+        setFromLocalStorage(lists);
+    })
+
+
+    // Bulk dismiss event function
+    dismiss.addEventListener('click', function (e) {
+        bulkInput.value = '';
+        bulkInput.type = "text";
+        bulkSelect.selectedIndex = 0;
+        bulkPriority.selectedIndex = 0;
+        bulkStatus.selectedIndex = 0;
+
+        let checkBoxes = document.querySelectorAll('.check_box');
+        [...checkBoxes].forEach(box => {
+            box.checked = false;
+        })
+        checkedArray = [];
+        allSelect.checked = false;
+        bulkActionHandler();
+    })
+
+
     // Get tasks on load
     window.onload = loading();
 
@@ -503,6 +626,5 @@
             showDataOnUI(list, index + 1)
         })
     }
-
 
 })()

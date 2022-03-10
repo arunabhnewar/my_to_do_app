@@ -151,20 +151,49 @@ main {
     padding: 0 25px;
 }
 
+#group_action {
+    flex: 1;
+    display: flex;
+    gap: 5px;
+}
+
+
+#bulk_input {
+    padding: 5px 15px;
+    border: 0;
+}
+
+#bulk_select {
+    padding: 4px 15px;
+    border: 0;
+    cursor: pointer;
+    margin: 0 0 0 5px;
+}
+
 #bulk_del {
-    padding: 5px 10px;
-    margin: 0 0 0 10px;
+    padding: 5px 15px;
+    margin: 0 0 0 5px;
     cursor: pointer;
     background: #e75e02;
     color: #fff;
     border: 0;
 }
 
-#bulk_edit {
+#bulk_priority {
     padding: 5px 15px;
     border: 0;
     cursor: pointer;
-    background: #16a085;
+    margin: 0 0 0 5px;
+    background: #2f0150;
+    color: #fff;
+}
+
+#bulk_status {
+    padding: 5px 15px;
+    border: 0;
+    cursor: pointer;
+    margin: 0 0 0 5px;
+    background: #130f40;
     color: #fff;
 }
 

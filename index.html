@@ -95,10 +95,33 @@
         </div>
 
         <div id="bulk_action">
+
             <div id="group_action">
-                <button id="bulk_edit">Edit</button>
+
+                <div class="edit_action">
+                    <input id="bulk_input" type="text" placeholder="Change the task name">
+                    <select id="bulk_select" name="">
+                        <option value="name">Name</option>
+                        <option value="date">Date</option>
+                    </select>
+                </div>
+
+                <select name="priority" id="bulk_priority">
+                    <option disabled selected>-- Change Priority --</option>
+                    <option value="high">High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                </select>
+
+                <select name="status" id="bulk_status">
+                    <option disabled selected>-- Change Status --</option>
+                    <option value="complete">Complete</option>
+                    <option value="incomplete">Incomplete</option>
+                </select>
+
                 <button id="bulk_del">Delete</button>
             </div>
+
             <button id="dismiss">X</button>
         </div>
 
